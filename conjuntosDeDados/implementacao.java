@@ -16,7 +16,7 @@ public class implementacao {
                     try {
                         dados.add(Integer.parseInt(valor.trim()));
                     } catch (NumberFormatException e) {
-                        // Ignora valores não numéricos
+
                     }
                 }
             }

@@ -3,22 +3,18 @@ import java.io.IOException;
 public class Main {
 
     public static void main(String[] args) throws IOException {
-        // Leitura dos dados aleatórios
         int[] aleatorio100 = implementacao.readFile("ConjuntosDeDados/aleatorio_100.csv");
         int[] aleatorio1000 = implementacao.readFile("ConjuntosDeDados/aleatorio_1000.csv");
         int[] aleatorio10000 = implementacao.readFile("ConjuntosDeDados/aleatorio_10000.csv");
 
-        // Leitura dos dados em ordem crescente
         int[] crescente100 = implementacao.readFile("ConjuntosDeDados/crescente_100.csv");
         int[] crescente1000 = implementacao.readFile("ConjuntosDeDados/crescente_1000.csv");
         int[] crescente10000 = implementacao.readFile("ConjuntosDeDados/crescente_10000.csv");
 
-        // Leitura dos dados em ordem decrescente
         int[] decrescente100 = implementacao.readFile("ConjuntosDeDados/decrescente_100.csv");
         int[] decrescente1000 = implementacao.readFile("ConjuntosDeDados/decrescente_1000.csv");
         int[] decrescente10000 = implementacao.readFile("ConjuntosDeDados/decrescente_10000.csv");
 
-        // Testes para dados aleatórios
         System.out.println("========== DADOS ALEATÓRIOS ==========");
         System.out.println("Bubble Sort em Aleatório 100:");
         implementacao.testSort(aleatorio100, "Bubble Sort");
@@ -41,7 +37,6 @@ public class Main {
         System.out.println("Quick Sort em Aleatório 10000:");
         implementacao.testSort(aleatorio10000, "Quick Sort");
 
-        // Testes para dados em ordem crescente
         System.out.println("\n========== DADOS EM ORDEM CRESCENTE ==========");
         System.out.println("Bubble Sort em Crescente 100:");
         implementacao.testSort(crescente100, "Bubble Sort");
@@ -64,7 +59,6 @@ public class Main {
         System.out.println("Quick Sort em Crescente 10000:");
         implementacao.testSort(crescente10000, "Quick Sort");
 
-        // Testes para dados em ordem decrescente
         System.out.println("\n========== DADOS EM ORDEM DECRESCENTE ==========");
         System.out.println("Bubble Sort em Decrescente 100:");
         implementacao.testSort(decrescente100, "Bubble Sort");
