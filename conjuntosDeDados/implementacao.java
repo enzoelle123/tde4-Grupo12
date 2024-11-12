@@ -61,7 +61,16 @@ public class implementacao {
     }
 
     public static int[] readFile(String filename) throws IOException {
-        BufferedReader reader = new BufferedReader(new FileReader(filename));
+        // Ajuste o caminho para garantir que ele acesse o arquivo corretamente
+        String filePath = System.getProperty("user.dir") + File.separator + filename; // Caminho relativo com base no diretório atual
+
+        File file = new File(filePath);
+        if (!file.exists()) {
+            System.out.println("Arquivo não encontrado: " + file.getAbsolutePath());
+            return new int[0]; // Retorna um array vazio caso o arquivo não seja encontrado
+        }
+
+        BufferedReader reader = new BufferedReader(new FileReader(file));
         List<Integer> data = new ArrayList<>();
         String line;
         while ((line = reader.readLine()) != null) {
@@ -70,13 +79,13 @@ public class implementacao {
                 try {
                     data.add(Integer.parseInt(value.trim()));
                 } catch (NumberFormatException e) {
+                    // Ignora valores não numéricos
                 }
             }
         }
         reader.close();
         return data.stream().mapToInt(i -> i).toArray();
     }
-
 
     // Função para medir e exibir o tempo de execução
     public static void testSort(int[] data, String algorithm) {
