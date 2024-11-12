@@ -1,104 +1,100 @@
-import java.io.*;
-import java.util.*;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class implementacao {
 
-    // Algoritmo Bubble Sort
-    public static void bubbleSort(int[] arr) {
-        int n = arr.length;
-        for (int i = 0; i < n - 1; i++) {
-            for (int j = 0; j < n - i - 1; j++) {
-                if (arr[j] > arr[j + 1]) {
-                    // Troca de elementos
-                    int temp = arr[j];
-                    arr[j] = arr[j + 1];
-                    arr[j + 1] = temp;
+    public static int[] readFile(String nomeArquivo) {
+        List<Integer> dados = new ArrayList<>();
+        try (BufferedReader br = new BufferedReader(new FileReader(nomeArquivo))) {
+            String linha;
+            while ((linha = br.readLine()) != null) {
+                String[] valores = linha.split(",");
+                for (String valor : valores) {
+                    try {
+                        dados.add(Integer.parseInt(valor.trim()));
+                    } catch (NumberFormatException e) {
+                        // Ignora valores não numéricos
+                    }
+                }
+            }
+            System.out.println("Leitura do arquivo concluída.");
+        } catch (IOException e) {
+            System.err.println("Erro ao ler o arquivo: " + e.getMessage());
+        }
+        return dados.stream().mapToInt(i -> i).toArray();
+    }
+
+    public static void testSort(int[] dados, String tipoAlgoritmo) {
+        long tempoInicio = System.nanoTime();
+
+        switch (tipoAlgoritmo) {
+            case "Bubble Sort":
+                bubbleSort(dados);
+                break;
+            case "Insertion Sort":
+                insertionSort(dados);
+                break;
+            case "Quick Sort":
+                quickSort(dados, 0, dados.length - 1);
+                break;
+            default:
+                System.out.println("Algoritmo desconhecido.");
+                return;
+        }
+
+        long tempoFim = System.nanoTime();
+        System.out.println(tipoAlgoritmo + " - Tempo de execução: " + (tempoFim - tempoInicio) + " ns");
+    }
+
+    public static void bubbleSort(int[] dados) {
+        for (int i = 0; i < dados.length - 1; i++) {
+            for (int j = 0; j < dados.length - i - 1; j++) {
+                if (dados[j] > dados[j + 1]) {
+                    int temp = dados[j];
+                    dados[j] = dados[j + 1];
+                    dados[j + 1] = temp;
                 }
             }
         }
     }
 
-    // Algoritmo Insertion Sort
-    public static void insertionSort(int[] arr) {
-        int n = arr.length;
-        for (int i = 1; i < n; i++) {
-            int key = arr[i];
+    public static void insertionSort(int[] dados) {
+        for (int i = 1; i < dados.length; i++) {
+            int chave = dados[i];
             int j = i - 1;
-            while (j >= 0 && arr[j] > key) {
-                arr[j + 1] = arr[j];
-                j--;
+            while (j >= 0 && dados[j] > chave) {
+                dados[j + 1] = dados[j];
+                j = j - 1;
             }
-            arr[j + 1] = key;
+            dados[j + 1] = chave;
         }
     }
 
-    // Algoritmo Quick Sort
-    public static void quickSort(int[] arr, int low, int high) {
-        if (low < high) {
-            int pi = partition(arr, low, high);
-            quickSort(arr, low, pi - 1);  // Ordenar a parte esquerda
-            quickSort(arr, pi + 1, high); // Ordenar a parte direita
+    public static void quickSort(int[] dados, int inicio, int fim) {
+        if (inicio < fim) {
+            int pivo = particionar(dados, inicio, fim);
+            quickSort(dados, inicio, pivo - 1);
+            quickSort(dados, pivo + 1, fim);
         }
     }
 
-    private static int partition(int[] arr, int low, int high) {
-        int pivot = arr[high];
-        int i = (low - 1);
-        for (int j = low; j < high; j++) {
-            if (arr[j] < pivot) {
+    public static int particionar(int[] dados, int inicio, int fim) {
+        int pivo = dados[fim];
+        int i = (inicio - 1);
+        for (int j = inicio; j < fim; j++) {
+            if (dados[j] <= pivo) {
                 i++;
-                // Troca
-                int temp = arr[i];
-                arr[i] = arr[j];
-                arr[j] = temp;
+                int temp = dados[i];
+                dados[i] = dados[j];
+                dados[j] = temp;
             }
         }
-        // Troca o pivot para sua posição correta
-        int temp = arr[i + 1];
-        arr[i + 1] = arr[high];
-        arr[high] = temp;
+        int temp = dados[i + 1];
+        dados[i + 1] = dados[fim];
+        dados[fim] = temp;
         return i + 1;
-    }
-
-    public static int[] readFile(String filename) throws IOException {
-        // Ajuste o caminho para garantir que ele acesse o arquivo corretamente
-        String filePath = System.getProperty("user.dir") + File.separator + filename; // Caminho relativo com base no diretório atual
-
-        File file = new File(filePath);
-        if (!file.exists()) {
-            System.out.println("Arquivo não encontrado: " + file.getAbsolutePath());
-            return new int[0]; // Retorna um array vazio caso o arquivo não seja encontrado
-        }
-
-        BufferedReader reader = new BufferedReader(new FileReader(file));
-        List<Integer> data = new ArrayList<>();
-        String line;
-        while ((line = reader.readLine()) != null) {
-            String[] values = line.split(",");
-            for (String value : values) {
-                try {
-                    data.add(Integer.parseInt(value.trim()));
-                } catch (NumberFormatException e) {
-                    // Ignora valores não numéricos
-                }
-            }
-        }
-        reader.close();
-        return data.stream().mapToInt(i -> i).toArray();
-    }
-
-    // Função para medir e exibir o tempo de execução
-    public static void testSort(int[] data, String algorithm) {
-        int[] copy = Arrays.copyOf(data, data.length);
-        long startTime = System.nanoTime();
-        if (algorithm.equals("Bubble Sort")) {
-            bubbleSort(copy);
-        } else if (algorithm.equals("Insertion Sort")) {
-            insertionSort(copy);
-        } else if (algorithm.equals("Quick Sort")) {
-            quickSort(copy, 0, copy.length - 1);
-        }
-        long endTime = System.nanoTime();
-        System.out.println(algorithm + " levou " + (endTime - startTime) + " nanosegundos");
     }
 }
